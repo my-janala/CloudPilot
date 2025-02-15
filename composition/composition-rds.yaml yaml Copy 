@@ -1,0 +1,28 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: composite-database-rds
+spec:
+  compositeTypeRef:
+    apiVersion: database.example.org/v1alpha1
+    kind: CompositeDatabase
+  resources:
+    - name: rdsinstance
+      base:
+        apiVersion: rds.aws.crossplane.io/v1beta1
+        kind: DBInstance
+        spec:
+          forProvider:
+            engine: postgres
+            engineVersion: "13.3"
+            instanceClass: db.t3.micro
+            masterUsername: master
+            publiclyAccessible: false
+          writeConnectionSecretToRef:
+            name: rds-conn
+            namespace: crossplane-system
+      patches:
+        - fromFieldPath: "spec.parameters.engineVersion"
+          toFieldPath: "spec.forProvider.engineVersion"
+        - fromFieldPath: "spec.parameters.instanceClass"
+          toFieldPath: "spec.forProvider.instanceClass"

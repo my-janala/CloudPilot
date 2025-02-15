@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: humanitec-agent
+  namespace: humanitec
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: humanitec-agent
+  template:
+    metadata:
+      labels:
+        app: humanitec-agent
+    spec:
+      containers:
+      - name: agent
+        image: humanitec/agent:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: HUMANITEC_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: humanitec-secret
+              key: token
+        - name: HUMANITEC_API_URL
+          value: "https://api.humanitec.io"

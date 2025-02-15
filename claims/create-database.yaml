@@ -1,0 +1,8 @@
+apiVersion: database.example.org/v1alpha1
+kind: Database
+metadata:
+  name: mydb
+spec:
+  parameters:
+    engineVersion: "13.3"
+    instanceClass: "db.t3.micro"
